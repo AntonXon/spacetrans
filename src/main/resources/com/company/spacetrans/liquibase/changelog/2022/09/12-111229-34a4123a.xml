@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="st">
+        <addNotNullConstraint columnDataType="CLOB" columnName="DESCRIPTION" tableName="ST_ATMOSPHERE" validate="true"/>
+    </changeSet>
+    <changeSet id="2" author="st">
+        <addNotNullConstraint columnDataType="UUID" columnName="GAS_ID" tableName="ST_ATMOSPHERIC_GAS" validate="true"/>
+    </changeSet>
+    <changeSet id="3" author="st">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="NAME" tableName="ST_GAS" validate="true"/>
+    </changeSet>
+    <changeSet id="4" author="st">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="NAME" tableName="ST_MOON" validate="true"/>
+    </changeSet>
+    <changeSet id="5" author="st">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="NAME" tableName="ST_PLANET" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://moonEdit.caption"
+        focusComponent="form">
+    <data>
+        <instance id="moonDc"
+                  class="com.company.spacetrans.entity.Moon">
+            <fetchPlan extends="_base">
+                <property name="planet" fetchPlan="_base"/>
+                <property name="atmosphere" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+            <instance id="atmosphereDc" property="atmosphere"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout spacing="true" expand="editActions">
+        <hbox spacing="true">
+            <form id="form" dataContainer="moonDc">
+                <column width="350px">
+                    <textField id="nameField" property="name"/>
+                    <textField id="massField" property="mass"/>
+                    <fileStorageUpload id="pictureField" property="picture" showClearButton="true" showFileName="true"/>
+                    <entityPicker id="planetField" property="planet">
+                        <actions>
+                            <action id="entityLookup" type="entity_lookup"/>
+                            <action id="entityClear" type="entity_clear"/>
+                        </actions>
+                    </entityPicker>
+                    <entityPicker id="atmosphereField" property="atmosphere">
+                        <actions>
+                            <action id="entityLookup" type="entity_lookup"/>
+                            <action id="entityClear" type="entity_clear"/>
+                        </actions>
+                    </entityPicker>
+                </column>
+            </form>
+            <image id="imageContainer"
+                   dataContainer="moonDc"
+                   property="picture"
+                   width="300"
+                   height="300" scaleMode="SCALE_DOWN"/>
+        </hbox>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

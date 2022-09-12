@@ -1,0 +1,9 @@
+Name,Mass,Semi-major axis(AU),"Orbital period (years)","Rotation period (days)",Rings
+Mercury,0.06,0.39,0.24,58.65,no
+Venus,0.81,0.72,0.62,243.02,no
+Earth,1.00,1.00,1.00,1.00,no
+Mars,0.11,1.52,1.88,44621,no
+Jupiter,317.83,5.20,11.86,0.41,yes
+Saturn,95.16,9.54,29.45,0.44,yes
+Uranus,14.54,19.19,84.02,0.72,yes
+Neptune,17.15,44772,164.79,0.67,yes
