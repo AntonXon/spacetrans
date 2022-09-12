@@ -1,22 +1,16 @@
 package com.company.spacetrans.screen.planet;
 
-import com.company.spacetrans.app.PlanetImportService;
+import com.company.spacetrans.app.service.PlanetImportService;
 import io.jmix.core.FileRef;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
-import io.jmix.ui.UiComponents;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.app.inputdialog.DialogOutcome;
 import io.jmix.ui.app.inputdialog.InputParameter;
-import io.jmix.ui.component.FileStorageUploadField;
 import io.jmix.ui.model.CollectionLoader;
 import io.jmix.ui.screen.*;
 import com.company.spacetrans.entity.Planet;
-import io.jmix.ui.upload.TemporaryStorage;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.File;
-import java.util.UUID;
 
 @UiController("st_Planet.browse")
 @UiDescriptor("planet-browse.xml")

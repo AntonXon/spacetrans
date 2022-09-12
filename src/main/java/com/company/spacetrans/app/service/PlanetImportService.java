@@ -1,4 +1,4 @@
-package com.company.spacetrans.app;
+package com.company.spacetrans.app.service;
 
 import com.company.spacetrans.entity.Planet;
 import io.jmix.core.DataManager;

@@ -11,6 +11,9 @@
               caption="msg://com.company.spacetrans.screen.atmosphericgas/atmosphericGasBrowse.menu"/>
         <item screen="st_Moon.browse" caption="msg://com.company.spacetrans.screen.moon/moonBrowse.menu"/>
         <item screen="st_Planet.browse" caption="msg://com.company.spacetrans.screen.planet/planetBrowse.menu"/>
+        <item screen="st_Spaceport.browse"
+              caption="msg://com.company.spacetrans.screen.spaceport/spaceportBrowse.menu"/>
+        <item screen="st_Carrier.browse" caption="msg://com.company.spacetrans.screen.carrier/carrierBrowse.menu"/>
     </menu>
 
 </menu-config>
