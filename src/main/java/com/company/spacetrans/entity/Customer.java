@@ -29,8 +29,7 @@ public class Customer {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "GRADE", nullable = false)
-    @NotNull
+    @Column(name = "GRADE")
     private String grade;
 
     public CustomerGrade getGrade() {

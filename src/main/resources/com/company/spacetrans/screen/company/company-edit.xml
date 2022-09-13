@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
-        caption="msg://carrierEdit.caption"
+        caption="msg://companyEdit.caption"
         focusComponent="form">
     <data>
-        <instance id="carrierDc"
-                  class="com.company.spacetrans.entity.Carrier">
-            <fetchPlan extends="_base">
-                <property name="ports" fetchPlan="_base"/>
-            </fetchPlan>
+        <instance id="companyDc"
+                  class="com.company.spacetrans.entity.Company">
+            <fetchPlan extends="_base"/>
             <loader/>
-            <collection id="portsDc" property="ports"/>
         </instance>
     </data>
     <facets>
@@ -28,26 +25,15 @@
     <dialogMode height="600"
                 width="800"/>
     <layout spacing="true" expand="editActions">
-        <form id="form" dataContainer="carrierDc">
+        <form id="form" dataContainer="companyDc">
             <column width="350px">
                 <textField id="nameField" property="name"/>
+                <textField id="emailField" property="email"/>
+                <comboBox id="gradeField" property="grade"/>
+                <textField id="registrationIdField" property="registrationId"/>
+                <textField id="companyTypeField" property="companyType"/>
             </column>
         </form>
-        <groupBox id="portsBox" caption="msg://com.company.spacetrans.entity/Carrier.ports">
-            <table id="portsTable" dataContainer="portsDc" width="100%" height="200px">
-                <actions>
-                    <action id="add" type="add"/>
-                    <action id="exclude" type="exclude"/>
-                </actions>
-                <columns>
-                    <column id="name"/>
-                </columns>
-                <buttonsPanel>
-                    <button action="portsTable.add"/>
-                    <button action="portsTable.exclude"/>
-                </buttonsPanel>
-            </table>
-        </groupBox>
         <hbox id="editActions" spacing="true">
             <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
             <button id="closeBtn" action="windowClose"/>

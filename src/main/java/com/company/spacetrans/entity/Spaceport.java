@@ -40,7 +40,7 @@ public class Spaceport {
     private Moon moon;
 
     @Column(name = "IS_DEFAULT")
-    private Boolean isDefault;
+    private Boolean isDefault = false;
 
     @EmbeddedParameters(nullAllowed = false)
     @Embedded

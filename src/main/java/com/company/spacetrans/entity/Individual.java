@@ -14,7 +14,6 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "st_Individual")
 @PrimaryKeyJoinColumn(name = "CUSTOMER_ID", referencedColumnName = "ID")
 public class Individual extends Customer {
-    @InstanceName
     @Column(name = "FIRST_NAME", nullable = false)
     @NotNull
     private String firstName;

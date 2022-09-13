@@ -14,6 +14,12 @@
         <item screen="st_Spaceport.browse"
               caption="msg://com.company.spacetrans.screen.spaceport/spaceportBrowse.menu"/>
         <item screen="st_Carrier.browse" caption="msg://com.company.spacetrans.screen.carrier/carrierBrowse.menu"/>
+        <item screen="st_Discounts.browse"
+              caption="msg://com.company.spacetrans.screen.discounts/discountsBrowse.menu"/>
+        <item screen="st_Company.browse" caption="msg://com.company.spacetrans.screen.company/companyBrowse.menu"/>
+        <item screen="st_Individual.browse"
+              caption="msg://com.company.spacetrans.screen.individual/individualBrowse.menu"/>
+        <item screen="st_Waybill.browse" caption="msg://com.company.spacetrans.screen.waybill/waybillBrowse.menu"/>
     </menu>
 
 </menu-config>

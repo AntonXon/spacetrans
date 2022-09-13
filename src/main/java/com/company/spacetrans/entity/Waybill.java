@@ -65,7 +65,7 @@ public class Waybill {
     private List<WaybillItem> items;
 
     @Column(name = "TOTAL_WEIGTH")
-    private Double totalWeigth;
+    private Double totalWeight;
 
     @Column(name = "TOTAL_CHARGE", precision = 19, scale = 2)
     private BigDecimal totalCharge;
@@ -78,12 +78,12 @@ public class Waybill {
         this.totalCharge = totalCharge;
     }
 
-    public Double getTotalWeigth() {
-        return totalWeigth;
+    public Double getTotalWeight() {
+        return totalWeight;
     }
 
-    public void setTotalWeigth(Double totalWeigth) {
-        this.totalWeigth = totalWeigth;
+    public void setTotalWeight(Double totalWeigth) {
+        this.totalWeight = totalWeigth;
     }
 
     public List<WaybillItem> getItems() {

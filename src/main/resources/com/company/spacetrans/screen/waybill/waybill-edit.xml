@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://waybillEdit.caption"
+        focusComponent="form">
+    <data>
+        <instance id="waybillDc"
+                  class="com.company.spacetrans.entity.Waybill">
+            <fetchPlan extends="_base">
+                <property name="creator" fetchPlan="_base"/>
+                <property name="shipper" fetchPlan="_base"/>
+                <property name="consignee" fetchPlan="_base"/>
+                <property name="departurePort" fetchPlan="_base">
+                    <property name="planet" fetchPlan="_base"/>
+                    <property name="moon" fetchPlan="_base"/>
+                </property>
+                <property name="destinationPort" fetchPlan="_base">
+                    <property name="planet" fetchPlan="_base"/>
+                    <property name="moon" fetchPlan="_base"/>
+                </property>
+                <property name="carrier" fetchPlan="_base"/>
+                <property name="items" fetchPlan="_base">
+                    <property name="dim" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader/>
+            <collection id="itemsDc" property="items"/>
+        </instance>
+        <collection id="customersDc" class="com.company.spacetrans.entity.Customer">
+            <fetchPlan extends="_base"/>
+            <loader id="customersDl">
+                <query>
+                    <![CDATA[select e from st_Customer e where type(e) = :class]]>
+                </query>
+            </loader>
+        </collection>
+        <collection id="astronomicalBodiesDc" class="com.company.spacetrans.entity.AstronomicalBody">
+            <loader id="astronomicalBodiesDl"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout spacing="true" expand="editActions">
+        <form id="form" dataContainer="waybillDc">
+            <column width="350px">
+                <textField id="referenceField" property="reference"/>
+                <radioButtonGroup id="shipperType" orientation="horizontal"/>
+                <comboBox id="shipperField" property="shipper"/>
+                <comboBox id="departurePlaceField" caption="msg://departurePlaceField.caption"/>
+                <entityPicker id="departurePortField" property="departurePort">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+                <entityPicker id="carrierField" property="carrier">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+                <textField id="totalWeightField" property="totalWeight"/>
+                <textField id="totalChargeField" property="totalCharge"/>
+            </column>
+            <column width="350px">
+                <entityPicker id="creatorField" property="creator">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+                <radioButtonGroup id="consigneeType" orientation="horizontal"/>
+                <entityPicker id="consigneeField" property="consignee">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+                <comboBox id="destinationPlaceField" caption="msg://destinationPlaceField.caption"/>
+                <entityPicker id="destinationPortField" property="destinationPort">
+                    <actions>
+                        <action id="entityLookup" type="entity_lookup"/>
+                        <action id="entityClear" type="entity_clear"/>
+                    </actions>
+                </entityPicker>
+            </column>
+        </form>
+        <groupBox id="itemsBox" caption="msg://com.company.spacetrans.entity/Waybill.items">
+            <table id="itemsTable" dataContainer="itemsDc" width="100%" height="200px">
+                <actions>
+                    <action id="create" type="create"/>
+                    <action id="edit" type="edit"/>
+                    <action id="remove" type="remove"/>
+                </actions>
+                <columns>
+                    <column id="name"/>
+                    <column id="number"/>
+                    <column id="weight"/>
+                    <column id="charge"/>
+                    <column id="dim"/>
+                </columns>
+                <buttonsPanel>
+                    <button action="itemsTable.create"/>
+                    <button action="itemsTable.edit"/>
+                    <button action="itemsTable.remove"/>
+                </buttonsPanel>
+            </table>
+        </groupBox>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>
