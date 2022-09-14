@@ -1,23 +1,20 @@
 package com.company.spacetrans.screen.waybill;
 
+import com.company.spacetrans.app.service.CalculatorService;
 import com.company.spacetrans.entity.*;
 import com.company.spacetrans.screen.company.CompanyBrowse;
 import com.company.spacetrans.screen.individual.IndividualBrowse;
 import io.jmix.core.DataManager;
-import io.jmix.core.Entity;
 import io.jmix.core.LoadContext;
+import io.jmix.ui.action.Action;
 import io.jmix.ui.action.entitypicker.EntityLookupAction;
-import io.jmix.ui.component.ComboBox;
-import io.jmix.ui.component.EntityPicker;
-import io.jmix.ui.component.HasValue;
-import io.jmix.ui.component.RadioButtonGroup;
-import io.jmix.ui.model.CollectionContainer;
-import io.jmix.ui.model.CollectionLoader;
+import io.jmix.ui.component.*;
+import io.jmix.ui.model.*;
 import io.jmix.ui.screen.*;
-import liquibase.pro.packaged.I;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.inject.Named;
+import java.math.BigDecimal;
 import java.util.*;
 
 @UiController("st_Waybill.edit")
@@ -29,6 +26,8 @@ public class WaybillEdit extends StandardEditor<Waybill> {
 
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private CalculatorService calculatorService;
     @Autowired
     private CollectionLoader<Customer> customersDl;
     @Autowired
@@ -47,6 +46,16 @@ public class WaybillEdit extends StandardEditor<Waybill> {
     private EntityPicker<Spaceport> destinationPortField;
     @Autowired
     private EntityPicker<Spaceport> departurePortField;
+    @Autowired
+    private CollectionPropertyContainer<WaybillItem> itemsDc;
+    @Autowired
+    private TextField<Double> totalWeightField;
+    @Autowired
+    private Table<WaybillItem> itemsTable;
+    @Autowired
+    private TextField<BigDecimal> totalChargeField;
+    @Autowired
+    private Label<String> discountLabel;
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
@@ -76,6 +85,8 @@ public class WaybillEdit extends StandardEditor<Waybill> {
                 consigneeType.setValue(INDIVIDUAL_TYPE);
             }
         }
+        //
+        setDiscount();
     }
 
     @Subscribe("shipperType")
@@ -136,6 +147,78 @@ public class WaybillEdit extends StandardEditor<Waybill> {
         setPort(event.getValue().getId(), destinationPortField);
     }
 
+    @Install(to = "itemsTable.create", subject = "newEntitySupplier")
+    private WaybillItem itemsTableCreateNewEntitySupplier() {
+        WaybillItem waybillItem = dataManager.create(WaybillItem.class);
+        waybillItem.setWaybill(getEditedEntity());
+        waybillItem.setNumber(getEditedEntity().getItems().size() + 1);
+        return waybillItem;
+    }
+
+    @Subscribe("itemsTable.itemDown")
+    public void onItemsTableItemDown(Action.ActionPerformedEvent event) {
+        moveItem(false);
+    }
+
+    @Subscribe("itemsTable.itemUp")
+    public void onItemsTableItemUp(Action.ActionPerformedEvent event) {
+        moveItem(true);
+    }
+
+    @Subscribe(id = "itemsDc", target = Target.DATA_CONTAINER)
+    public void onItemsDcCollectionChange(CollectionContainer.CollectionChangeEvent<WaybillItem> event) {
+        if (event.getChangeType().equals(CollectionChangeType.REMOVE_ITEMS)) {
+            WaybillItem deletedWaybillItem = event.getChanges().iterator().next();
+            int deletedNumber = deletedWaybillItem.getNumber();
+            List<WaybillItem> waybillItemList = itemsDc.getItems();
+            for (WaybillItem waybillItem : waybillItemList) {
+                if (waybillItem.getNumber() > deletedNumber) {
+                    waybillItem.setNumber(waybillItem.getNumber() - 1);
+                }
+            }
+        }
+        totalWeightField.setValue(calculatorService.getTotalWeight(getEditedEntity()));
+        totalChargeField.setValue(calculatorService.getTotalCharge(getEditedEntity()));
+    }
+
+    @Subscribe("shipperField")
+    public void onShipperFieldValueChange(HasValue.ValueChangeEvent<Customer> event) {
+        setDiscount();
+        totalChargeField.setValue(calculatorService.getTotalCharge(getEditedEntity()));
+    }
+
+    private void moveItem(boolean up) {
+        WaybillItem waybillItem = itemsTable.getSingleSelected();
+        if (waybillItem != null) {
+            int currentPosition = waybillItem.getNumber();
+            int newPosition = currentPosition;
+            if (up) {
+                newPosition--;
+            } else {
+                newPosition++;
+            }
+            if (newPosition == 0 || newPosition > itemsDc.getItems().size()) {
+                return;
+            }
+            for (WaybillItem item : itemsDc.getItems()) {
+                if (item.equals(waybillItem)) {
+                    continue;
+                }
+                if (item.getNumber() == newPosition) {
+                    item.setNumber(currentPosition);
+                }
+            }
+            waybillItem.setNumber(newPosition);
+            itemsTable.sort("number", Table.SortDirection.ASCENDING);
+        }
+    }
+
+    private void setDiscount() {
+        if (getEditedEntity().getShipper() != null) {
+            BigDecimal discount = calculatorService.getDiscount(getEditedEntity().getShipper());
+            discountLabel.setValue("Discount value " + discount.toPlainString() + "%");
+        }
+    }
 
     private void setPort(UUID id, EntityPicker<Spaceport> entityPicker) {
         entityPicker.setValue(null);

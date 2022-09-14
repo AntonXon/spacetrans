@@ -65,14 +65,14 @@
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
-                <entityPicker id="carrierField" property="carrier">
+                <entityPicker id="carrierField" property="carrier" colspan="2">
                     <actions>
                         <action id="entityLookup" type="entity_lookup"/>
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
-                <textField id="totalWeightField" property="totalWeight"/>
-                <textField id="totalChargeField" property="totalCharge"/>
+                <textField id="totalWeightField" property="totalWeight" editable="false" colspan="2"/>
+                <textField id="totalChargeField" property="totalCharge" editable="false"/>
             </column>
             <column width="350px">
                 <entityPicker id="creatorField" property="creator">
@@ -95,6 +95,7 @@
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
+                <label id="discountLabel" stylename="colored"/>
             </column>
         </form>
         <groupBox id="itemsBox" caption="msg://com.company.spacetrans.entity/Waybill.items">
@@ -103,18 +104,24 @@
                     <action id="create" type="create"/>
                     <action id="edit" type="edit"/>
                     <action id="remove" type="remove"/>
+                    <action id="itemUp" icon="CHEVRON_UP" caption="msg://itemUp.caption" trackSelection="true"/>
+                    <action id="itemDown" icon="CHEVRON_DOWN" caption="msg://itemDown.caption" trackSelection="true"/>
                 </actions>
                 <columns>
+                    <column id="number" sort="ASCENDING"/>
                     <column id="name"/>
-                    <column id="number"/>
                     <column id="weight"/>
+                    <column id="dim.width"/>
+                    <column id="dim.height"/>
+                    <column id="dim.length"/>
                     <column id="charge"/>
-                    <column id="dim"/>
                 </columns>
                 <buttonsPanel>
                     <button action="itemsTable.create"/>
                     <button action="itemsTable.edit"/>
                     <button action="itemsTable.remove"/>
+                    <button action="itemsTable.itemUp"/>
+                    <button action="itemsTable.itemDown"/>
                 </buttonsPanel>
             </table>
         </groupBox>
