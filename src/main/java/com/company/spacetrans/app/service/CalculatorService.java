@@ -40,6 +40,9 @@ public class CalculatorService {
 
     //
     public Double getTotalWeight(Waybill waybill) {
+        if (waybill.getItems() == null) {
+            return 0.0;
+        }
         Double totalWeight = waybill.getItems().stream()
                 .map(WaybillItem::getWeight)
                 .reduce(0.0, Double::sum);
@@ -48,12 +51,16 @@ public class CalculatorService {
 
     //
     public BigDecimal getTotalCharge(Waybill waybill) {
+        if (waybill.getItems() == null) {
+            return BigDecimal.ZERO;
+        }
         BigDecimal charge = waybill.getItems().stream()
                 .map(WaybillItem::getCharge)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         BigDecimal discount = getDiscount(waybill.getShipper());
-        BigDecimal discountValue = charge.multiply(discount).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP);
+        BigDecimal discountValue = charge.multiply(discount).divide(BigDecimal.valueOf(100), RoundingMode.HALF_EVEN);
         charge = charge.subtract(discountValue);
+        charge = charge.setScale(2, RoundingMode.HALF_EVEN);
         return charge;
     }
 

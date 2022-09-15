@@ -57,25 +57,20 @@
             <column width="350px">
                 <textField id="referenceField" property="reference"/>
                 <radioButtonGroup id="shipperType" orientation="horizontal"/>
-                <comboBox id="shipperField" property="shipper"/>
-                <comboBox id="departurePlaceField" caption="msg://departurePlaceField.caption"/>
+                <entityComboBox id="shipperField" property="shipper" optionsContainer="customersDc"/>
+                <entityComboBox id="departurePlaceField" caption="msg://departurePlaceField.caption" optionsContainer="astronomicalBodiesDc"/>
                 <entityPicker id="departurePortField" property="departurePort">
                     <actions>
                         <action id="entityLookup" type="entity_lookup"/>
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
-                <entityPicker id="carrierField" property="carrier" colspan="2">
-                    <actions>
-                        <action id="entityLookup" type="entity_lookup"/>
-                        <action id="entityClear" type="entity_clear"/>
-                    </actions>
-                </entityPicker>
+                <comboBox id="carrierField" property="carrier" colspan="2"/>
                 <textField id="totalWeightField" property="totalWeight" editable="false" colspan="2"/>
                 <textField id="totalChargeField" property="totalCharge" editable="false"/>
             </column>
             <column width="350px">
-                <entityPicker id="creatorField" property="creator">
+                <entityPicker id="creatorField" property="creator" editable="false">
                     <actions>
                         <action id="entityLookup" type="entity_lookup"/>
                         <action id="entityClear" type="entity_clear"/>
@@ -88,7 +83,7 @@
                         <action id="entityClear" type="entity_clear"/>
                     </actions>
                 </entityPicker>
-                <comboBox id="destinationPlaceField" caption="msg://destinationPlaceField.caption"/>
+                <entityComboBox id="destinationPlaceField" caption="msg://destinationPlaceField.caption" optionsContainer="astronomicalBodiesDc"/>
                 <entityPicker id="destinationPortField" property="destinationPort">
                     <actions>
                         <action id="entityLookup" type="entity_lookup"/>

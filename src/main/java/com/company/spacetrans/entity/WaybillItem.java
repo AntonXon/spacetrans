@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @JmixEntity
 @Table(name = "ST_WAYBILL_ITEM", indexes = {
-        @Index(name = "IDX_ST_WAYBILL_ITEM_UNQ", columnList = "NUMBER", unique = true),
         @Index(name = "IDX_ST_WAYBILL_ITEM_UNQ_1", columnList = "NAME", unique = true),
         @Index(name = "IDX_ST_WAYBILL_ITEM_WAYBILL", columnList = "WAYBILL_ID")
 })
@@ -47,6 +46,7 @@ public class WaybillItem {
 
     @Column(name = "CHARGE", precision = 19, scale = 2)
     private BigDecimal charge;
+
     @JoinColumn(name = "WAYBILL_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Waybill waybill;

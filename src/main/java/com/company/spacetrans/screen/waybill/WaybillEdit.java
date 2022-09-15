@@ -6,6 +6,7 @@ import com.company.spacetrans.screen.company.CompanyBrowse;
 import com.company.spacetrans.screen.individual.IndividualBrowse;
 import io.jmix.core.DataManager;
 import io.jmix.core.LoadContext;
+import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.action.entitypicker.EntityLookupAction;
 import io.jmix.ui.component.*;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.inject.Named;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @UiController("st_Waybill.edit")
 @UiDescriptor("waybill-edit.xml")
@@ -27,6 +29,8 @@ public class WaybillEdit extends StandardEditor<Waybill> {
     @Autowired
     private DataManager dataManager;
     @Autowired
+    private CurrentAuthentication currentAuthentication;
+    @Autowired
     private CalculatorService calculatorService;
     @Autowired
     private CollectionLoader<Customer> customersDl;
@@ -34,8 +38,6 @@ public class WaybillEdit extends StandardEditor<Waybill> {
     private RadioButtonGroup<String> shipperType;
     @Autowired
     private RadioButtonGroup<String> consigneeType;
-    @Autowired
-    private ComboBox<Customer> shipperField;
     @Named("consigneeField.entityLookup")
     private EntityLookupAction<Customer> consigneeFieldEntityLookup;
     @Autowired
@@ -56,6 +58,13 @@ public class WaybillEdit extends StandardEditor<Waybill> {
     private TextField<BigDecimal> totalChargeField;
     @Autowired
     private Label<String> discountLabel;
+    @Autowired
+    private ComboBox<Carrier> carrierField;
+
+    @Subscribe
+    public void onInitEntity(InitEntityEvent<Waybill> event) {
+        event.getEntity().setCreator((User) currentAuthentication.getUser());
+    }
 
     @Subscribe
     public void onBeforeShow(BeforeShowEvent event) {
@@ -87,6 +96,11 @@ public class WaybillEdit extends StandardEditor<Waybill> {
         }
         //
         setDiscount();
+        //
+        setPlace(getEditedEntity().getDeparturePort(), departurePlaceField);
+        setPlace(getEditedEntity().getDestinationPort(), destinationPlaceField);
+        //
+        carrierField.setOptionsList(getAvailableCarriers());
     }
 
     @Subscribe("shipperType")
@@ -97,11 +111,6 @@ public class WaybillEdit extends StandardEditor<Waybill> {
             customersDl.setParameter("class", Individual.class);
         }
         customersDl.load();
-    }
-
-    @Subscribe(id = "customersDc", target = Target.DATA_CONTAINER)
-    public void onCustomersDcCollectionChange(CollectionContainer.CollectionChangeEvent<Customer> event) {
-        shipperField.setOptionsList(event.getSource().getItems());
     }
 
     @Subscribe("consigneeType")
@@ -123,12 +132,6 @@ public class WaybillEdit extends StandardEditor<Waybill> {
                 .all()
                 .list());
         return astronomicalBodies;
-    }
-
-    @Subscribe(id = "astronomicalBodiesDc", target = Target.DATA_CONTAINER)
-    public void onAstronomicalBodiesDcCollectionChange(CollectionContainer.CollectionChangeEvent<AstronomicalBody> event) {
-        departurePlaceField.setOptionsList(event.getSource().getItems());
-        destinationPlaceField.setOptionsList(event.getSource().getItems());
     }
 
     @Subscribe("departurePlaceField")
@@ -183,8 +186,60 @@ public class WaybillEdit extends StandardEditor<Waybill> {
 
     @Subscribe("shipperField")
     public void onShipperFieldValueChange(HasValue.ValueChangeEvent<Customer> event) {
-        setDiscount();
-        totalChargeField.setValue(calculatorService.getTotalCharge(getEditedEntity()));
+        if (event.isUserOriginated()) {
+            setDiscount();
+            totalChargeField.setValue(calculatorService.getTotalCharge(getEditedEntity()));
+        }
+    }
+
+    @Subscribe("departurePortField")
+    public void onDeparturePortFieldValueChange(HasValue.ValueChangeEvent<Spaceport> event) {
+        updateCarrierValue();
+    }
+
+    @Subscribe("destinationPortField")
+    public void onDestinationPortFieldValueChange(HasValue.ValueChangeEvent<Spaceport> event) {
+        updateCarrierValue();
+    }
+
+    private void updateCarrierValue() {
+        List<Carrier> carriers = getAvailableCarriers();
+        carrierField.setOptionsList(carriers);
+        if (!carriers.contains(carrierField.getValue())) {
+            carrierField.clear();
+        }
+    }
+
+    private List<Carrier> getAvailableCarriers() {
+        List<Carrier> listDep = dataManager
+                .load(Carrier.class)
+                .query("select e from st_Carrier e join e.ports p where p = :port")
+                .parameter("port", getEditedEntity().getDeparturePort())
+                .list();
+        List<Carrier> listDest = dataManager
+                .load(Carrier.class)
+                .query("select e from st_Carrier e join e.ports p where p = :port")
+                .parameter("port", getEditedEntity().getDestinationPort())
+                .list();
+        List<Carrier> intersect = listDep.stream()
+                .distinct()
+                .filter(listDest::contains)
+                .collect(Collectors.toList());
+        return intersect;
+    }
+
+    private void setPlace(Spaceport port, ComboBox<AstronomicalBody> field) {
+        if (port != null) {
+            AstronomicalBody astronomicalBody = null;
+            if (port.getPlanet() != null) {
+                astronomicalBody = port.getPlanet();
+            } else if (port.getMoon() != null) {
+                astronomicalBody = port.getMoon();
+            }
+            if (astronomicalBody != null) {
+                field.setValue(astronomicalBody);
+            }
+        }
     }
 
     private void moveItem(boolean up) {
