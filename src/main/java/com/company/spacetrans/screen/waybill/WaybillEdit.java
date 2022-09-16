@@ -154,7 +154,7 @@ public class WaybillEdit extends StandardEditor<Waybill> {
     private WaybillItem itemsTableCreateNewEntitySupplier() {
         WaybillItem waybillItem = dataManager.create(WaybillItem.class);
         waybillItem.setWaybill(getEditedEntity());
-        waybillItem.setNumber(getEditedEntity().getItems().size() + 1);
+        waybillItem.setNumber(getEditedEntity().getItems() == null ? 1 : getEditedEntity().getItems().size() + 1);
         return waybillItem;
     }
 

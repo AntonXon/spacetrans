@@ -5,9 +5,12 @@ import com.company.spacetrans.entity.Waybill;
 import com.company.spacetrans.entity.WaybillItem;
 import io.jmix.core.DataManager;
 import io.jmix.core.Id;
+import io.jmix.core.Metadata;
 import io.jmix.core.SaveContext;
 import io.jmix.core.event.EntityChangedEvent;
 import io.jmix.core.event.EntitySavingEvent;
+import io.jmix.core.metamodel.model.MetaProperty;
+import liquibase.pro.packaged.P;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -34,7 +37,13 @@ public class WaybillItemEventListener {
         Waybill waybill;
         if (event.getType() == EntityChangedEvent.Type.DELETED) {
             Id<Waybill> waybillId = event.getChanges().getOldReferenceId("waybill");
-            waybill = dataManager.load(waybillId).one();
+            if (waybillId == null) {
+                return;
+            }
+            waybill = dataManager.load(waybillId).optional().orElse(null);
+            if (waybill == null) {
+                return;
+            }
             //
             int number = 0;
             SaveContext saveContext = new SaveContext();

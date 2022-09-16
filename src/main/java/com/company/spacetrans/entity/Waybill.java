@@ -61,7 +61,7 @@ public class Waybill {
     private Carrier carrier;
 
     @Composition
-    @OneToMany(mappedBy = "waybill")
+    @OneToMany(mappedBy = "waybill", cascade = CascadeType.REMOVE)
     private List<WaybillItem> items;
 
     @Column(name = "TOTAL_WEIGTH")
