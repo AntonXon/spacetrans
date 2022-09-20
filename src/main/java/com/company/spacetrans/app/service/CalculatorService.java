@@ -66,6 +66,9 @@ public class CalculatorService {
 
     //
     public BigDecimal getDiscount(Customer customer) {
+        if (customer == null) {
+            return BigDecimal.ZERO;
+        }
         if (customer.getGrade() == null) {
             return BigDecimal.ZERO;
         }

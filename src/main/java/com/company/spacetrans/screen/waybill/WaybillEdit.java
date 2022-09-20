@@ -264,7 +264,8 @@ public class WaybillEdit extends StandardEditor<Waybill> {
                 }
             }
             waybillItem.setNumber(newPosition);
-            itemsTable.sort("number", Table.SortDirection.ASCENDING);
+            itemsDc.getMutableItems().sort(Comparator.comparing(WaybillItem::getNumber));
+            //itemsTable.sort("number", Table.SortDirection.ASCENDING);
         }
     }
 
@@ -272,6 +273,8 @@ public class WaybillEdit extends StandardEditor<Waybill> {
         if (getEditedEntity().getShipper() != null) {
             BigDecimal discount = calculatorService.getDiscount(getEditedEntity().getShipper());
             discountLabel.setValue("Discount value " + discount.toPlainString() + "%");
+        } else {
+            discountLabel.setValue("");
         }
     }
 
